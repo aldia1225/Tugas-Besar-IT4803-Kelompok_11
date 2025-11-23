@@ -1,5 +1,5 @@
-#ifndef CHILD_H_INCLUDED
-#define CHILD_H_INCLUDED
+#ifndef PAKET_H_INCLUDED
+#define PAKET_H_INCLUDED
 
 typedef data_paket infotype;
 typedef struct paket *addr_pkt;
@@ -22,4 +22,4 @@ struct List_paket {
 };
 
 
-#endif // CHILD_H_INCLUDED
+#endif // PAKET_H_INCLUDED
