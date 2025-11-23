@@ -10,13 +10,13 @@ struct data_kurir  {
     int berat;
 };
 
-struct paket {
+struct kurir {
     infotype info;
     addr_pkt next;
   
 };
 
-struct List_paket {
+struct List_kurir {
     addr_pkt first;
 
 };
