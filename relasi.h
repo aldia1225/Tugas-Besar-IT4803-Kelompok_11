@@ -1,18 +1,30 @@
 #ifndef RELASI_H_INCLUDED
 #define RELASI_H_INCLUDED
+#include "paket.h"
+#include "kurir.h"
 
 typedef struct relasi *addr_relasi;
 
 struct relasi {
-    addr_pkt pkt ;
-    addr_kurir kur;
+    addr_paket paket ;
+    addr_kurir kurir;
     addr_relasi next;
 };
 
 struct List_relasi {
     addr_relasi first;
-
 };
 
+void createListRelasi(List_relasi &L);
+bool isEmpty_relasi(List_relasi L);
+addr_relasi createElementRelasi(infotype x);
+void printInfo_Relasi(List L);
+addr_relasi findElementRelasi(List_relasi L, addr_relasi p);
+void insertFirstRelasi(List_relasi &L, addr_relasi p);
+void insertLastRelasi(List_relasi &L, addr_relasi p);
+void insertAfterRelasi(List_relasi &L, addr_relasi p, addr_relasi prec);
+void deleteFirstRelasi(List_relasi &L, addr_relasi &p);
+void deleteLastRelasi(List_relasi &L, addr_relasi &p);
+void deleteAfterRelasi(List_relasi &L, addr_relasi p, addr_relasi prec);
 
 #endif // RELASI_H_INCLUDED
