@@ -1,5 +1,6 @@
+#include <iostream>
 #include "kurir.h"
-
+using namespace std;
 void createListKurir(List_kurir &L){
      L.first = nullptr;
 }
@@ -71,13 +72,12 @@ void deleteLastKurir(List_kurir &L, addr_kurir &p){
 }
 
 void deleteAfterKurir(List_kurir &L, addr_kurir p, addr_kurir prec){
-    if (isEmpt_kurir(L)) {
+    if (isEmpty_kurir(L)) {
         cout << "List kurir kosong";
         p = nullptr;
     }else if (prec == nullptr){
         cout << "prec tidak ditemukan";
         p = nullptr;
-    }
     }else if (prec->next != nullptr) {
         p = prec->next;
         prec->next = p->next;

@@ -1,5 +1,6 @@
 #ifndef KURIR_H_INCLUDED
 #define KURIR_H_INCLUDED
+using namespace std;
 
 typedef data_kurir infotype;
 typedef struct kurir *addr_kurir;
