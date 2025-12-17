@@ -1,87 +1,48 @@
 #include "paket.h"
 
-void createListPaket(List_paket &L){
-     L.first = nullptr;
+void createListPaket(List_paket &L){ L.first = nullptr; L.last = nullptr; }
+bool isEmpty_paket(List_paket L){ return L.first == nullptr; }
+
+addr_paket createElementPaket(int ID, string Alamat, string Ukuran){
+    addr_paket P = new paket;
+    P->info.ID_paket = ID;
+    P->info.alamat = Alamat;
+    P->info.ukuran = Ukuran;
+    P->next = nullptr; P->prev = nullptr;
+    return P;
 }
 
-bool isEmpty_paket(List_paket L){
-    return L.first == nullptr;
+addr_paket findElementPaket(List_paket L, int ID){
+    addr_paket P = L.first;
+    while(P != nullptr && P->info.ID_paket != ID){ P = P->next; }
+    return P;
 }
 
-addr_paket createElementPaket(int IDPaket, string alamat, string ukuran){
-    addr_paket p = new paket;
-    p -> info.ID_paket = IDPaket;
-    p -> info.alamat = alamat;
-    p -> info.ukuran = ukuran;
-    p -> next = nullptr;
-    return p;
+void insertLastPaket(List_paket &L, addr_paket P){
+    if(isEmpty_paket(L)){ L.first = P; L.last = P; }
+    else { P->prev = L.last; L.last->next = P; L.last = P; }
 }
 
-addr_paket findElementPaket(List_paket L,  int IDPaket){
-    addr_paket p = L.first;
-    while (p != nullptr || p -> info.ID_paket == IDPaket) {
-        p = p->next;
-    }
-    if (p != nullptr){
-        return p;
-    }else{
-        cout << "paket tidak ditemukan";
-        return nullptr;
-    }
-}
-
-void insertLastPaket(List_paket &L, addr_paket p){
-    addr_paket q;
-
-    if (L.first == nullptr) {
-            L.first = p;
-    }else {
-        q = L.first;
-        while (q -> next != nullptr){
-            q = q -> next;
-        }
-         q -> next = p;
-    }
-}
-void insertAfterPaket(List_paket &L, addr_paket p, addr_paket prec){
-    if (prec == nullptr) {
-        cout << "prec tidak ditemukan";
-    }else{
-        p->next = prec->next;
-        prec->next = p;
+void insertAfterPaket(List_paket &L, addr_paket Prec, addr_paket P){
+    if(Prec != nullptr){
+        P->next = Prec->next; P->prev = Prec;
+        if(Prec->next != nullptr){ Prec->next->prev = P; }
+        else { L.last = P; }
+        Prec->next = P;
     }
 }
 
-void deleteLastPaket(List_paket &L, addr_paket &p){
-    addr_paket q;
-
-    if (isEmpty_paket(L)) {
-        p = nullptr;
-    } else if (L.first -> next == nullptr) {
-        p = L.first;
-        L.first = nullptr;
-    } else {
-        q = L.first;
-        while (q -> next -> next != nullptr){
-            q = q -> next;
-        }
-         p = q -> next;
-         q -> next = nullptr;
-    }
+void deleteLastPaket(List_paket &L, addr_paket &P){
+    if(isEmpty_paket(L)){ P = nullptr; }
+    else if(L.first == L.last){ P = L.first; L.first = nullptr; L.last = nullptr; }
+    else { P = L.last; L.last = L.last->prev; L.last->next = nullptr; P->prev = nullptr; }
 }
 
-void deleteAfterPaket(List_paket &L, addr_paket p, addr_paket prec){
-    if (isEmpty_paket(L)) {
-        cout << "List paket kosong";
-        p = nullptr;
-    }else if (prec == nullptr){
-        cout << "prec tidak ditemukan";
-        p = nullptr;
-    }else if (prec->next != nullptr) {
-        p = prec->next;
-        prec->next = p->next;
-        p->next = nullptr;
-    } else {
-        p = nullptr;
-    }
+void deleteAfterPaket(List_paket &L, addr_paket Prec, addr_paket &P){
+    if(Prec != nullptr && Prec->next != nullptr){
+        P = Prec->next; Prec->next = P->next;
+        if(P->next != nullptr){ P->next->prev = Prec; }
+        else { L.last = Prec; }
+        P->next = nullptr; P->prev = nullptr;
+    } else { P = nullptr; }
 }

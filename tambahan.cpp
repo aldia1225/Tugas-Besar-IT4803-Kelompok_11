@@ -1,209 +1,186 @@
 #include "relasi.h"
-#include "kurir.h"
-#include "paket.h"
+#include <iostream>
+using namespace std;
 
-void daftarpaketkurir(List_relasi &L, int IDKurir){//show data child dari parent tertentu
-    addr_kurir K;
-    addr_relasi R;
-    R = L.first;
-    K = findElementKurir(L, IDKurir);
-    while (R != nullptr){
-        if (R->kurir == K){
-            cout << "ID Paket : " << R->paket->info.ID_paket << endl;
-            cout << "Alamat   : " << R->paket->info.alamat << endl;
-            cout << "Berat    : " << R->paket->info.berat << endl;
-            cout << endl;
-        }
+// Cek apakah paket sudah diambil (1 Paket = 1 Kurir)
+bool isPaketAssigned(List_relasi LR, addr_paket P) {
+    addr_relasi R = LR.first;
+    while(R != nullptr) {
+        if (R->paket == P) return true;
         R = R->next;
     }
+    return false;
 }
 
-void daftarkurirpaket(List_relasi &L, int IDPaket){//show data parent dari child tertentu
-    addr_paket P;
-    addr_relasi R;
-    R = L.first;
-    P = findElementPaket(L, IDPaket);
-    while (R != nullptr){
-        if (R->kurir == P){
-            cout << "ID Kurir : " << R->kurir->info.ID_kurir << endl;
-            cout << "Kendaraan   : " << R->kurir->info.kendaraan << endl;
-            cout << "Berat    : " << R->kurir->info.berat << "Kg" << endl;
-            cout << endl;
-        }
-        R = R->next;
-    }
-}
+// --- LOGIC AUTO DISTRIBUSI ---
+void autoInputRelasi(List_relasi &LR, List_kurir &LK, List_paket LP) {
+    addr_paket P = LP.first;
 
-void daftarpaketdankurir(List_relasi &L){//show data child dan parent yang masing-masing child miliki
-    addr_relasi R;
-    R = L.first;
-    while (R != nullptr || R->paket != nullptr){
-        cout << "ID Paket : " << R->paket->info.ID_paket << endl;
-        cout << "Alamat   : " << R->paket->info.alamat << endl;
-        cout << "Berat    : " << R->paket->info.berat << endl;
-      
-        cout << "ID Kurir : " << R->kurir->info.ID_kurir << endl;
-        cout << "Kendaraan   : " << R->kurir->info.kendaraan << endl;
-        cout << "Berat    : " << R->kurir->info.berat << "Kg" << endl;
-        cout << "--------------------" << endl;
-        R = R->next;
-    }
-}
+    addr_kurir turnMobil = LK.first;
+    addr_kurir turnMotor = LK.first;
+    int count = 0;
 
-void daftarkurirdanpaket(List_relasi &L){//show setiap data parent beserta child yang beralasi dengannya
-    addr_relasi R,Q;
-    R = L.first;
-    while (R != nullptr){
-        cout << "ID Kurir : " << R->kurir->info.ID_kurir << endl;
-        cout << "Kendaraan   : " << R->kurir->info.kendaraan << endl;
-        cout << "Berat    : " << R->kurir->info.berat << "Kg" << endl;
+    cout << "Mulai Distribusi Otomatis..." << endl;
 
-        while (Q != nullptr || Q->kurir == R->kurir){
-            Q = Q->next;
-        }
-        cout << "ID Paket : " << R->paket->info.ID_paket << endl;
-        cout << "Alamat   : " << R->paket->info.alamat << endl;
-        cout << "Berat    : " << R->paket->info.berat << endl;
-        cout << "--------------------" << endl;
-        R = R->next;
-    }
-}
+    while (P != nullptr) {
+        if (!isPaketAssigned(LR, P)) {
+            addr_kurir assignedK = nullptr;
 
-void showKurirByPaket(List_relasi L, int ID_Paket) {//Show data parent yang berelasi dengan child tertentu
-    // Set pointer penelusur ke elemen pertama list relasi
-    addr_relasi P = L.first;
-    bool ditemukan = false;
-
-    cout << "Menampilkan Kurir untuk Paket ID: " << ID_Paket << endl;
-    cout << "--------------------------------------------" << endl;
-
-    // Loop sampai akhir list relasi
-    while (P != NULL) {
-        // Cek apakah pointer paket valid DAN ID-nya cocok
-        // Kita akses: Relasi -> Paket -> Info -> ID_paket
-        if (P->paket != NULL && P->paket->info.ID_paket == ID_Paket) {
-            
-            // Jika cocok, cek apakah ada kurir yang terhubung
-            if (P->kurir != NULL) {
-                cout << "Ditemukan Kurir:" << endl;
-                cout << "ID Kurir   : " << P->kurir->info.ID_kurir << endl;
-                cout << "Kendaraan  : " << P->kurir->info.kendaraan << endl;
-                cout << "Kapasitas  : " << P->kurir->info.berat << " kg" << endl;
-                cout << endl;
-                ditemukan = true;
+            // 1. Paket BESAR -> MOBIL
+            if (P->info.ukuran == "Besar") {
+                addr_kurir start = turnMobil;
+                if(start != nullptr) {
+                    do {
+                        if (turnMobil->info.kendaraan == "Mobil") {
+                            assignedK = turnMobil;
+                            turnMobil = turnMobil->next;
+                            if (turnMobil == nullptr) turnMobil = LK.first;
+                            break;
+                        }
+                        turnMobil = turnMobil->next;
+                        if (turnMobil == nullptr) turnMobil = LK.first;
+                    } while (turnMobil != start);
+                }
             }
-        }
-        // Lanjut ke node relasi berikutnya
-        P = P->next;
-    }
-
-    if (!ditemukan) {
-        cout << "Paket dengan ID " << ID_Paket << " tidak memiliki kurir atau tidak ditemukan dalam relasi." << endl;
-    }
-}
-
-void countRelasiAllKurir(List_kurir LK, List_relasi LR) {
-    addr_kurir P_Kurir = LK.first;
-
-    cout << "=== JUMLAH PAKET PER KURIR ===" << endl;
-    while (P_Kurir != NULL) {
-        int jumlah = 0;
-        addr_relasi P_Rel = LR.first;
-        
-        // Loop Relasi untuk mencocokkan dengan Kurir saat ini
-        while (P_Rel != NULL) {
-            if (P_Rel->kurir == P_Kurir) { // Bandingkan address
-                jumlah++;
+            // 2. Paket KECIL -> MOTOR
+            else if (P->info.ukuran == "Kecil") {
+                addr_kurir start = turnMotor;
+                if(start != nullptr) {
+                    do {
+                        if (turnMotor->info.kendaraan == "Motor") {
+                            assignedK = turnMotor;
+                            turnMotor = turnMotor->next;
+                            if (turnMotor == nullptr) turnMotor = LK.first;
+                            break;
+                        }
+                        turnMotor = turnMotor->next;
+                        if (turnMotor == nullptr) turnMotor = LK.first;
+                    } while (turnMotor != start);
+                }
             }
-            P_Rel = P_Rel->next;
-        }
 
-        cout << "Kurir " << P_Kurir->info.ID_kurir 
-             << " (" << P_Kurir->info.kendaraan << ") membawa: " 
-             << jumlah << " paket." << endl;
-
-        P_Kurir = P_Kurir->next;
-    }
-    cout << "------------------------------" << endl;
-}
-
-int countRelasiByPaketID(List_relasi LR, int ID_Paket) {
-    int jumlah = 0;
-    addr_relasi P = LR.first;
-
-    while (P != NULL) {
-        // Pastikan pointer paket tidak NULL sebelum akses info
-        if (P->paket != NULL && P->paket->info.ID_paket == ID_Paket) {
-            jumlah++;
+            if (assignedK != nullptr) {
+                insertLastRelasi(LR, createElementRelasi(assignedK, P));
+                assignedK->info.jmlpkt++;
+                cout << "[OK] Paket " << P->info.ID_paket << " (" << P->info.ukuran << ") -> "
+                     << assignedK->info.kendaraan << " ID:" << assignedK->info.ID_kurir << endl;
+                count++;
+            }
         }
         P = P->next;
     }
-    return jumlah;
+    cout << "Selesai. " << count << " paket didistribusikan." << endl;
 }
 
-int countPaketNoRelasi(List_paket LP, List_relasi LR) {
-    int countNoRelasi = 0;
-    addr_paket P_Paket = LP.first;
+// --- TAMPILAN FORMAT LIST (SESUAI REQUEST) ---
 
-    while (P_Paket != NULL) {
-        bool adaRelasi = false;
-        addr_relasi P_Rel = LR.first;
+void showAllParentWithChild(List_relasi LR, List_kurir LK){
+    addr_kurir K = LK.first;
+    cout << "\n=== DATA MUATAN KURIR ===" << endl;
+    while(K != nullptr){
+        cout << "Kurir " << K->info.ID_kurir << " (" << K->info.kendaraan << "):" << endl;
 
-        // Cek apakah paket ini ada di list relasi
-        while (P_Rel != NULL) {
-            if (P_Rel->paket == P_Paket) { // Cek by Address agar akurat
-                adaRelasi = true;
-                break; // Jika ketemu, hentikan pencarian di relasi
+        // Loop Relasi untuk Kurir ini
+        addr_relasi R = LR.first;
+        bool ada = false;
+        while(R != nullptr){
+            if(R->kurir == K){
+                cout << "  - Paket " << R->paket->info.ID_paket
+                     << " (" << R->paket->info.ukuran << ", " << R->paket->info.alamat << ")" << endl;
+                ada = true;
             }
-            P_Rel = P_Rel->next;
+            R = R->next;
         }
 
-        // Jika setelah dicek semua relasi ternyata tidak ada
-        if (!adaRelasi) {
-            countNoRelasi++;
-            // Opsional: Print ID paket yang nganggur
-            // cout << "Paket ID " << P_Paket->info.ID_paket << " belum ada kurir." << endl;
-        }
-
-        P_Paket = P_Paket->next; // Pindah ke paket berikutnya (ingat List_paket kamu Doubly, next tetap ada)
+        if(!ada) cout << "  (Tidak ada muatan)" << endl;
+        cout << endl; // Spasi antar kurir
+        K = K->next;
     }
-
-    return countNoRelasi;
 }
 
-void editRelasiPaket(List_relasi &LR, List_paket LP, int ID_Kurir, int ID_Paket_Lama, int ID_Paket_Baru) {
-    // 1. Cari alamat Paket Baru terlebih dahulu
-    // Asumsi: Kamu punya fungsi findElementPaket di modul Paket
-    addr_paket P_PaketBaru = findElementPaket(LP, ID_Paket_Baru);
+void showAllChildWithParent(List_relasi LR, List_paket LP){
+    addr_paket P = LP.first;
+    cout << "\n=== STATUS PAKET ===" << endl;
+    while(P != nullptr){
+        cout << "Paket " << P->info.ID_paket << " (" << P->info.ukuran << "):" << endl;
 
-    if (P_PaketBaru == NULL) {
-        cout << "Gagal Edit: Paket Baru dengan ID " << ID_Paket_Baru << " tidak ditemukan." << endl;
-        return;
+        addr_relasi R = LR.first;
+        bool ada = false;
+        while(R != nullptr){
+            if(R->paket == P){
+                cout << "  - Kurir " << R->kurir->info.ID_kurir
+                     << " (" << R->kurir->info.kendaraan << ")" << endl;
+                ada = true;
+            }
+            R = R->next;
+        }
+
+        if(!ada) cout << "  (Belum diambil)" << endl;
+        cout << endl;
+        P = P->next;
     }
+}
 
-    // 2. Cari Relasi yang mau diubah
-    addr_relasi P_Rel = LR.first;
+void showChildFromParent(List_relasi LR, List_kurir LK, int IDKurir){
+    addr_kurir K = findElementKurir(LK, IDKurir);
+    if(!K){ cout << "Kurir tidak ditemukan." << endl; return; }
+
+    cout << "\nKurir " << IDKurir << " (" << K->info.kendaraan << "):" << endl;
+    addr_relasi R = LR.first;
     bool found = false;
-
-    while (P_Rel != NULL) {
-        // Syarat: Kurirnya cocok DAN Paket Lamanya cocok
-        if (P_Rel->kurir != NULL && P_Rel->paket != NULL &&
-            P_Rel->kurir->info.ID_kurir == ID_Kurir &&
-            P_Rel->paket->info.ID_paket == ID_Paket_Lama) {
-            
-            // Lakukan penggantian pointer paket
-            P_Rel->paket = P_PaketBaru;
+    while(R){
+        if(R->kurir == K) {
+            cout << "  - Paket " << R->paket->info.ID_paket << " (" << R->paket->info.ukuran << ")" << endl;
             found = true;
-            cout << "Berhasil mengubah relasi kurir " << ID_Kurir 
-                 << " dari Paket " << ID_Paket_Lama 
-                 << " menjadi Paket " << ID_Paket_Baru << "." << endl;
-            break;
         }
-        P_Rel = P_Rel->next;
+        R = R->next;
     }
+    if(!found) cout << "  (Kosong)" << endl;
+}
 
-    if (!found) {
-        cout << "Gagal Edit: Relasi antara Kurir " << ID_Kurir 
-             << " dan Paket " << ID_Paket_Lama << " tidak ditemukan." << endl;
+void showParentFromChild(List_relasi LR, List_paket LP, int IDPaket){
+    addr_paket P = findElementPaket(LP, IDPaket);
+    if(!P) { cout << "Paket tidak ditemukan." << endl; return; }
+
+    cout << "\nPaket " << IDPaket << ":" << endl;
+    addr_relasi R = LR.first;
+    bool found = false;
+    while(R){
+        if(R->paket == P) {
+            cout << "  - Kurir " << R->kurir->info.ID_kurir << endl;
+            found = true;
+        }
+        R = R->next;
     }
+    if(!found) cout << "  (Belum diambil)" << endl;
+}
+
+void editRelasi(List_relasi &LR, List_kurir LK, List_paket LP, int IDKurir, int IDPaketLama, int IDPaketBaru){
+    addr_kurir K = findElementKurir(LK, IDKurir);
+    addr_paket PBaru = findElementPaket(LP, IDPaketBaru);
+
+    if(K && PBaru){
+        // Validasi Kendaraan vs Paket
+        if ( (K->info.kendaraan == "Mobil" && PBaru->info.ukuran != "Besar") ||
+             (K->info.kendaraan == "Motor" && PBaru->info.ukuran != "Kecil") ) {
+             cout << "Gagal: Jenis Kendaraan & Ukuran Paket Tidak Cocok!" << endl;
+             return;
+        }
+        // Validasi Ketersediaan
+        if (isPaketAssigned(LR, PBaru)) {
+             cout << "Gagal: Paket Baru sudah diambil kurir lain." << endl;
+             return;
+        }
+
+        addr_relasi R = LR.first;
+        while(R){
+            if(R->kurir == K && R->paket->info.ID_paket == IDPaketLama){
+                R->paket = PBaru;
+                cout << "Sukses menukar paket." << endl;
+                return;
+            }
+            R = R->next;
+        }
+        cout << "Relasi lama tidak ditemukan." << endl;
+    } else cout << "ID Salah." << endl;
 }
