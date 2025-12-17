@@ -1,18 +1,27 @@
 #include "kurir.h"
 
 void insertFirstKurir(List_kurir &L, addr_kurir P){
-    if(isEmpty_kurir(L)){ L.first = P; }
-    else { P->next = L.first; L.first = P; }
+    if(isEmpty_kurir(L)){
+        L.first = P; }
+    else {
+        P->next = L.first; L.first = P;
+    }
 }
 
 void deleteFirstKurir(List_kurir &L, addr_kurir &P){
-    if(isEmpty_kurir(L)){ P = nullptr; }
-    else { P = L.first; L.first = L.first->next; P->next = nullptr; }
+    if(isEmpty_kurir(L)){
+        P = nullptr;
+    }
+    else {
+        P = L.first; L.first = L.first->next; P->next = nullptr;
+    }
 }
 
 void showKurir(List_kurir L){
     addr_kurir P = L.first;
-    if(P == nullptr){ cout << "List Kurir Kosong." << endl; }
+    if(P == nullptr){
+        cout << "List Kurir Kosong." << endl;
+    }
     else {
         cout << "=== DAFTAR KURIR ===" << endl;
         while(P != nullptr){
