@@ -1,27 +1,65 @@
-#include "paket.h"
+#include "kurir.h"
 
-void insertFirstPaket(List_paket &L, addr_paket P){
-    if(isEmpty_paket(L)){ L.first = P; L.last = P; }
-    else { P->next = L.first; L.first->prev = P; L.first = P; }
+void createListKurir(List_kurir &L){
+     L.first = nullptr;
 }
 
-void deleteFirstPaket(List_paket &L, addr_paket &P){
-    if(isEmpty_paket(L)){ P = nullptr; }
-    else if(L.first == L.last){ P = L.first; L.first = nullptr; L.last = nullptr; }
-    else { P = L.first; L.first = L.first->next; L.first->prev = nullptr; P->next = nullptr; }
+bool isEmpty_kurir(List_kurir L){
+    return L.first == nullptr;
 }
 
-void showPaket(List_paket L){
-    addr_paket P = L.first;
-    if(P == nullptr){ cout << "List Paket Kosong." << endl; }
-    else {
-        cout << "=== DAFTAR PAKET ===" << endl;
-        while(P != nullptr){
-            cout << "ID: " << P->info.ID_paket
-                 << " | " << P->info.ukuran
-                 << " | " << P->info.alamat << endl;
-            P = P->next;
+addr_kurir createElementKurir(int ID, string Kendaraan, int Jml){
+    addr_kurir P = new kurir;
+    P->info.ID_kurir = ID;
+    P->info.kendaraan = Kendaraan;
+    P->info.jmlpkt = Jml;
+    P->next = nullptr;
+    return P;
+}
+
+addr_kurir findElementKurir(List_kurir L, int ID){
+    addr_kurir P = L.first;
+    while(P != nullptr && P->info.ID_kurir != ID){
+        P = P->next;
+    }
+    return P;
+}
+
+void insertLastKurir(List_kurir &L, addr_kurir P){
+    if(isEmpty_kurir(L)){
+        L.first = P;
+    }else {
+        addr_kurir Q = L.first;
+        while(Q->next != nullptr){
+            Q = Q->next;}
+        Q->next = P;
+    }
+}
+
+void insertAfterKurir(List_kurir &L, addr_kurir Prec, addr_kurir P){
+    if(Prec != nullptr){
+        P->next = Prec->next; Prec->next = P;
+    }
+}
+
+void deleteLastKurir(List_kurir &L, addr_kurir &P){
+    if(isEmpty_kurir(L)){
+        P = nullptr;
+    }else if(L.first->next == nullptr){
+        P = L.first; L.first = nullptr;
+    }else {
+        addr_kurir Q = L.first;
+        while(Q->next->next != nullptr){
+            Q = Q->next;
         }
-        cout << "--------------------" << endl;
+        P = Q->next; Q->next = nullptr;
+    }
+}
+
+void deleteAfterKurir(List_kurir &L, addr_kurir Prec, addr_kurir &P){
+    if(Prec != nullptr && Prec->next != nullptr){
+        P = Prec->next; Prec->next = P->next; P->next = nullptr;
+    }else {
+        P = nullptr;
     }
 }
