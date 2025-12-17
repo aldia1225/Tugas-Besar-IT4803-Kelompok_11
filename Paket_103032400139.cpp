@@ -1,5 +1,5 @@
 #include "paket.h"
-void insertFirst(List_paket &L, addr_pkt P) {
+void insertFirstpaket(List_paket &L, addr_paket P) {
     if (L.first == nullptr) {
         L.first = P;
         L.last = P;
@@ -10,7 +10,7 @@ void insertFirst(List_paket &L, addr_pkt P) {
     }
 }
 
-void insertBefore(List_paket &L, addr_pkt P, addr_pkt prec) {
+void insertBeforepaket(List_paket &L, addr_paket P, addr_paket prec) {
     if (prec == L.first) {
         insertFirst(L, P);
     }else {
@@ -21,7 +21,7 @@ void insertBefore(List_paket &L, addr_pkt P, addr_pkt prec) {
     }
 }
 
-void deleteFirst(List_paket &L, addr_pkt &P) {
+void deleteFirstpaket(List_paket &L, addr_paket &P) {
     if (L.first == nullptr) {
         P = nullptr;
     }else if (L.first == L.last) {
@@ -37,15 +37,15 @@ void deleteFirst(List_paket &L, addr_pkt &P) {
 }
 
 
-void show(List_paket L) {
-    addr_pkt P = L.first;
+void showpaket(List_paket L) {
+    addr_paket P = L.first;
     if (P == nullptr){
         cout << "List Paket kosong." << endl;
         return;
     }while (P != nullptr){
-        cout << "ID Paket : " << P->info.ID_paket << endl;
-        cout << "Alamat   : " << P->info.alamat << endl;
-        cout << "Berat    : " << P->info.berat << endl;
+        cout << "ID Paket       : " << P->info.ID_paket << endl;
+        cout << "Alamat         : " << P->info.alamat << endl;
+        cout << "Ukuran Paket   : " << P->info.ukuran<< endl;
         cout << "--------------------" << endl;
         P = P->next;
     }

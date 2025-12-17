@@ -1,20 +1,22 @@
+#include <iostream>
 #include "kurir.h"
-void insertFirst(List_kurir &L, addr_kurir P) {
-    if (L.first == nullptr) {
+
+using namespace std;
+
+void insertFirstkurir(List_kurir &L, addr_kurir P) {
+    if (isEmpty_kurir(L)) {
         L.first = P;
-        P->next = nullptr;
     }else {
         P->next = L.first;
         L.first = P;
     }
 }
 
-void deleteLast(List_kurir &L, addr_kurir &P) {
-    P= nullptr;
-    if (L.first == nullptr) {
-        return;
-    }
-    if(L.first->next == nullptr) {
+void deleteLastkurir(List_kurir &L, addr_kurir &P) {
+    if (isEmpty_kurir(L)) {
+        P = nullptr;
+        cout << "List Kurir Kosong." << endl;
+    } elseif(L.first->next == nullptr) {
         P = L.first;
         L.first = nullptr;
     }else {
@@ -27,26 +29,27 @@ void deleteLast(List_kurir &L, addr_kurir &P) {
     }
 }
 
-void deleteFirst(List_kurir &L, addr_kurir &P) {
-    P= nullptr;
-    if (L.first == nullptr){
-        return;
-    }
+void deleteFirstkurir(List_kurir &L, addr_kurir &P) {
+    if (isEmpty_kurir(L)) {
+        P = nullptr;
+        cout << "List Kurir Kosong." << endl;
+    } else {
     P = L.first;
     L.first = L.first->next;
     P->next = nullptr;
 }
+}
 
-void show(List_kurir L) {
+void showkurir(List_kurir L) {
     addr_kurir P = L.first;
-    if (P == nullptr) {
-        cout << "List kosong." << endl;
+    if (isEmpty_kurir(L)) {
+        cout << "List Kurir kosong." << endl;
         return;
     }
     while (P != nullptr) {
         cout << "ID        : " << P->info.ID_kurir << endl;
         cout << "Kendaraan : " << P->info.kendaraan << endl;
-        cout << "Berat     : " << P->info.berat << endl;
+        cout << "Jumlah Paket     : " << P->info.jmlpkt << endl;
         cout << "--------------------" << endl;
         P = P->next;
     }

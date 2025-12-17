@@ -1,6 +1,7 @@
 #include <iostream>
 #include "kurir.h"
 using namespace std;
+
 void createListKurir(List_kurir &L){
      L.first = nullptr;
 }
@@ -9,32 +10,28 @@ bool isEmpty_kurir(List_kurir L){
     return L.first == nullptr;
 }
 
-addr_kurir createElementKurir(int IDKurir, string Nama, string Kendaraan){
+addr_kurir createElementKurir(int IDKurir, string Kendaraan){
     addr_kurir k = new kurir;
-    k -> info.IDKurir = IDKurir;
-    k -> info.Nama = Nama;
-    k -> info.Kendaraan = Kendaraan;
+    k -> info.ID_kurir = IDKurir;
+    k -> info.kendaraan = Kendaraan;
+    k ->info.jmlpkt = 0;
     k -> next = nullptr;
     return k;
 }
 
 addr_kurir findElementKurir(List_kurir L,  int IDKurir){
     addr_kurir k = L.first;
-    while (k != nullptr || k -> info.IDKurir == IDKurir) {
+    while (k != nullptr || k -> info.ID_kurir != IDKurir) {
         k = k->next;
     }
-    if (k != nullptr){
-        return k;
-    }else{
-        cout << "Kurir tidak ditemukan";
-        return nullptr;
-    }
+    return nullptr;
+
 }
 
 void insertLastKurir(List_kurir &L, addr_kurir p){
     addr_kurir q;
 
-    if (L.first == nullptr) {
+    if (isEmpty_kurir(L)) {
             L.first = p;
     }else {
         q = L.first;
@@ -84,4 +81,5 @@ void deleteAfterKurir(List_kurir &L, addr_kurir p, addr_kurir prec){
         p->next = nullptr;
     } else {
         p = nullptr;
+    }
 }

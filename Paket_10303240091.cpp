@@ -8,16 +8,16 @@ bool isEmpty_paket(List_paket L){
     return L.first == nullptr;
 }
 
-addr_kurir createElementPaket(int IDPaket, string alamat, int berat){
+addr_paket createElementPaket(int IDPaket, string alamat, string ukuran){
     addr_paket p = new paket;
     p -> info.ID_paket = IDPaket;
     p -> info.alamat = alamat;
-    p -> info.berat = berat;
+    p -> info.ukuran = ukuran;
     p -> next = nullptr;
     return p;
 }
 
-addr_kurir findElementPaket(List_paket L,  int IDPaket){
+addr_paket findElementPaket(List_paket L,  int IDPaket){
     addr_paket p = L.first;
     while (p != nullptr || p -> info.ID_paket == IDPaket) {
         p = p->next;
@@ -70,19 +70,18 @@ void deleteLastPaket(List_paket &L, addr_paket &p){
     }
 }
 
-void deleteAfterPaket(List_Paket &L, addr_paket p, addr_paket prec){
-    if (isEmpt_paket(L)) {
+void deleteAfterPaket(List_paket &L, addr_paket p, addr_paket prec){
+    if (isEmpty_paket(L)) {
         cout << "List paket kosong";
         p = nullptr;
     }else if (prec == nullptr){
         cout << "prec tidak ditemukan";
         p = nullptr;
-    }
     }else if (prec->next != nullptr) {
         p = prec->next;
         prec->next = p->next;
         p->next = nullptr;
     } else {
         p = nullptr;
+    }
 }
-
