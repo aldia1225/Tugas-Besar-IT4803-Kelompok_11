@@ -165,3 +165,26 @@ int countChildNoRelation(List_relasi LR, List_paket LP) {
     }
     return count;
 }
+
+void disconnectAllRelasi(List_relasi &LR) {
+    addr_relasi P = LR.first;
+    addr_relasi temp;
+
+    while (P != nullptr) {
+        // Update data beban paket pada kurir agar berkurang
+        if (P->kurir != nullptr) {
+            P->kurir->info.jmlpkt--;
+        }
+
+        // Simpan alamat node saat ini untuk dihapus
+        temp = P;
+
+        // Pindah ke node berikutnya sebelum node saat ini dihapus
+        P = P->next;
+
+        // Hapus node dari memori
+        delete temp;
+    }
+
+    LR.first = nullptr;
+}

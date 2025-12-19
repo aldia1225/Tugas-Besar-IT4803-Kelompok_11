@@ -28,6 +28,7 @@ void connectRelasi(List_relasi &LR, addr_kurir K, addr_paket P);
 void disconnectRelasi(List_relasi &LR, addr_kurir K, addr_paket P);
 bool isPaketAssigned(List_relasi LR, addr_paket P);
 void autoInputRelasi(List_relasi &LR, List_kurir &LK, List_paket LP);
+void disconnectAllRelasi(List_relasi &LR);
 
 void showAllParentWithChild(List_relasi LR, List_kurir LK);
 void showAllChildWithParent(List_relasi LR, List_paket LP);
