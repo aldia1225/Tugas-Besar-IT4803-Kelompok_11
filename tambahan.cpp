@@ -27,7 +27,7 @@ bool isPaketAssigned(List_relasi LR, addr_paket P) {
 }
 
 void autoInputRelasi(List_relasi &LR, List_kurir &LK, List_paket LP) {
-    addr_paket P = LP.first;
+    addr_paket P = LP.first;//jika ingin mengapus semua relasi terlebih dahulu agar pembagiannya rata bisa melakukan pemanggilan disconnect semua relasi
     int count = 0;
     cout << "Mulai Distribusi Otomatis..." << endl;
     while (P != nullptr) {
@@ -188,3 +188,4 @@ void disconnectAllRelasi(List_relasi &LR) {
 
     LR.first = nullptr;
 }
+
